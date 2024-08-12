@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: dilshad
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: dilshad
+      MYSQL_PASSWORD: dilshad
+  
+    ports:
+      - "3306:3306"
+    networks:
+      - java-login-app_default
+
+  tomcat:
+    image: tomcat:latest
+    container_name: tomcat_app
+    depends_on:
+      - mysql
+  
+    ports:
+      - "8080:8080"
+    networks:
+      - java-login-app_default
+
+
+  nginx:
+    image: nginx
+    container_name: nginx_proxy
+    depends_on:
+      - tomcat
+  
+    ports:
+      - "80:80"
+    networks:
+      - java-login-app_default
+
+networks:
+  java-login-app_default:
+    driver: bridge
+
